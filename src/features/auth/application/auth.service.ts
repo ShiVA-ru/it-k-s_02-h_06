@@ -1,11 +1,12 @@
 import { usersRepository } from "../../users/repositories/users.repository";
+import type { LoginSuccessView } from "../types/login.input.type";
 import { bcryptService } from "./bcrypt.service";
 
 export const authService = {
   async loginUser(
     loginOrEmail: string,
     password: string,
-  ): Promise<{ accessToken: string } | null> {
+  ): Promise<LoginSuccessView | null> {
     const isCorrectCredentials = await this.checkUserCredentials(
       loginOrEmail,
       password,

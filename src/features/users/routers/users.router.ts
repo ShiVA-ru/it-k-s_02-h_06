@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { inputValidationResultMiddleware } from "../../../core/middlewares/validation/input-validation-result.middleware";
 import { idValidation } from "../../../core/middlewares/validation/params-id-validation.middleware";
-import { superAdminGuardMiddleware } from "../../auth/middlewares/super-admin.guard.middleware";
+import { superAdminGuardMiddleware } from "../../auth/middlewares/super-admin.guard";
 import { userInputDtoValidation } from "../validation/users.input-dto.validation.middleware";
 import { paginationSortingSearchValidation } from "../validation/users.query.validation.middleware";
 import { createUserHandler } from "./handlers/users.create.handler";

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { inputValidationResultMiddleware } from "../../../core/middlewares/validation/input-validation-result.middleware";
 import { idValidation } from "../../../core/middlewares/validation/params-id-validation.middleware";
-import { superAdminGuardMiddleware } from "../../auth/middlewares/super-admin.guard.middleware";
+import { superAdminGuardMiddleware } from "../../auth/middlewares/super-admin.guard";
 import { blogPostInputDtoValidation } from "../../posts/validation/posts.input-dto.validation.middleware";
 import { paginationSortingValidation } from "../../posts/validation/posts.query.validation.middleware";
 import { blogInputDtoValidation } from "../validation/blogs.input-dto.validation.middleware";
