@@ -3,6 +3,7 @@ import { HttpStatus } from "../../../../core/types/http-statuses.types";
 import type { RequestWithBody } from "../../../../core/types/request.types";
 import { authService } from "../../application/auth.service";
 import type { LoginInput } from "../../types/login.input.type";
+import { ResultStatus } from "../../../../core/types/result.code";
 
 export const loginHandler = async (
   req: RequestWithBody<LoginInput>,
@@ -10,8 +11,9 @@ export const loginHandler = async (
 ) => {
   const { loginOrEmail, password } = req.body;
 
-  const accessToken = await authService.loginUser(loginOrEmail, password);
-  if (!accessToken) return res.sendStatus(HttpStatus.Unauthorized);
+  const result = await authService.loginUser(loginOrEmail, password);
+  if (result.status !== ResultStatus.Success)
+    return res.sendStatus(HttpStatus.Unauthorized);
 
-  return res.sendStatus(HttpStatus.NoContent);
+  return res.status(HttpStatus.Ok).json(result.data);
 };

@@ -1,17 +1,25 @@
 import type { Response } from "express";
 import type { validationErrorsDto } from "../../../../core/types/errors.types";
 import { HttpStatus } from "../../../../core/types/http-statuses.types";
-import type { RequestWithParams } from "../../../../core/types/request.types";
-import type { URIParamsId } from "../../../../core/types/uri-params.type";
+import type { IdType } from "../../../../core/types/id.types";
+import type { RequestWithUserId } from "../../../../core/types/request.types";
 import { usersQueryRepository } from "../../../users/repositories/users.query.repository";
-import type { UserView } from "../../../users/types/users.view.type";
+import type { MeView } from "../../types/me.view.type";
 
-export async function getUserHandler(
-  req: RequestWithParams<URIParamsId>,
-  res: Response<UserView | validationErrorsDto>,
+export async function getMeHandler(
+  req: RequestWithUserId<IdType>,
+  res: Response<MeView | validationErrorsDto>,
 ) {
   try {
-    const findEntity = await usersQueryRepository.findOneById(req.params.id);
+    const userId = req.user?.id;
+    console.log(userId);
+
+    if (!userId) {
+      res.sendStatus(HttpStatus.NotFound);
+      return;
+    }
+
+    const findEntity = await usersQueryRepository.findMeById(userId);
 
     if (!findEntity) {
       return res.sendStatus(HttpStatus.NotFound);

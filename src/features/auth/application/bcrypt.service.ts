@@ -6,7 +6,7 @@ export const bcryptService = {
     return bcrypt.hash(password, SALT_ROUNDS);
   },
 
-  async checkPassword(password: string, hash: string) {
+  async checkPassword(password: string, hash: string): Promise<boolean> {
     return bcrypt.compare(password, hash);
   },
 };

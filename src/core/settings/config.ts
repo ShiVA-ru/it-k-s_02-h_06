@@ -11,6 +11,7 @@ const config = {
   userCollectionName: process.env.USER_COLLECTION_NAME || "",
   adminUsername: process.env.ADMIN_USERNAME || "",
   adminPassword: process.env.ADMIN_PASSWORD || "",
+  jwtPrivateKey: process.env.JWT_PRIVATE_KEY || "",
 };
 
 export default config;
