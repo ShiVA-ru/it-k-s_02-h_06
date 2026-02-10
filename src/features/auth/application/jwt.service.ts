@@ -7,7 +7,9 @@ import type { Result } from "../../../core/types/result.type";
 export const jwtService = {
   async createToken(userId: string): Promise<Result<string | null>> {
     try {
-      const token = jwt.sign({ id: userId }, config.jwtPrivateKey);
+      const token = jwt.sign({ id: userId }, config.jwtPrivateKey, {
+        expiresIn: 60,
+      });
       return {
         status: ResultStatus.Success,
         extensions: [],

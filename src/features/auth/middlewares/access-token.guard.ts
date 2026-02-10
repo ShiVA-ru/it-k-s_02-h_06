@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { HttpStatus } from "../../../core/types/http-statuses.types";
-import { jwtService } from "../application/jwt.service";
 import { ResultStatus } from "../../../core/types/result.code";
+import { jwtService } from "../application/jwt.service";
 
 export const accessTockenGuardMiddleware = async (
   req: Request,
@@ -14,8 +14,10 @@ export const accessTockenGuardMiddleware = async (
   }
 
   const [authType, token] = req.headers.authorization.split(" ");
+
   if (authType !== "Bearer") {
     res.sendStatus(HttpStatus.Unauthorized);
+    return;
   }
 
   const result = await jwtService.verifyToken(token);
