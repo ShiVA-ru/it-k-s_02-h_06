@@ -12,6 +12,7 @@ const config = {
   adminUsername: process.env.ADMIN_USERNAME || "",
   adminPassword: process.env.ADMIN_PASSWORD || "",
   jwtPrivateKey: process.env.JWT_PRIVATE_KEY || "",
+  tokenExpireTime: process.env.TOKEN_EXPIRE_TIME || 60,
 };
 
 export default config;

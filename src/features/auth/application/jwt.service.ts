@@ -8,8 +8,9 @@ export const jwtService = {
   async createToken(userId: string): Promise<Result<string | null>> {
     try {
       const token = jwt.sign({ id: userId }, config.jwtPrivateKey, {
-        expiresIn: 60,
+        expiresIn: +config.tokenExpireTime,
       });
+
       return {
         status: ResultStatus.Success,
         extensions: [],

@@ -1,5 +1,6 @@
 import { ResultStatus } from "../../../core/types/result.code";
 import type { Result } from "../../../core/types/result.type";
+import { isSuccessResult } from "../../../core/utils/type-guards";
 import { mapEntityToViewModel } from "../../users/repositories/mappers/users.entity-map";
 import { usersRepository } from "../../users/repositories/users.repository";
 import type { UserView } from "../../users/types/users.view.type";
@@ -12,12 +13,12 @@ export const authService = {
     loginOrEmail: string,
     password: string,
   ): Promise<Result<LoginSuccessView | null>> {
-    const { status, data } = await this.checkUserCredentials(
+    const userCredentialsResult = await this.checkUserCredentials(
       loginOrEmail,
       password,
     );
 
-    if (!status || data === null) {
+    if (!isSuccessResult(userCredentialsResult)) {
       return {
         status: ResultStatus.Forbidden,
         errorMessage: "Credentials is not correct",
@@ -26,10 +27,10 @@ export const authService = {
       };
     }
 
-    const userId = data.id;
+    const userId = userCredentialsResult.data.id;
     const tokenResult = await jwtService.createToken(userId);
 
-    if (!tokenResult.status || tokenResult.data === null) {
+    if (!isSuccessResult(tokenResult)) {
       return {
         status: ResultStatus.Forbidden,
         errorMessage: "Can't create jwt token",
@@ -53,7 +54,7 @@ export const authService = {
     if (!user)
       return {
         status: ResultStatus.NotFound,
-        errorMessage: "User with this redentials is not found",
+        errorMessage: "User with this credentials is not found",
         extensions: [],
         data: null,
       };

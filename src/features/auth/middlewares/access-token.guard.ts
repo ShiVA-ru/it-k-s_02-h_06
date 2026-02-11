@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { HttpStatus } from "../../../core/types/http-statuses.types";
-import { ResultStatus } from "../../../core/types/result.code";
+import { isSuccessResult } from "../../../core/utils/type-guards";
 import { jwtService } from "../application/jwt.service";
 
 export const accessTockenGuardMiddleware = async (
@@ -22,7 +22,7 @@ export const accessTockenGuardMiddleware = async (
 
   const result = await jwtService.verifyToken(token);
 
-  if (result.data === null || result.status === ResultStatus.Forbidden) {
+  if (!isSuccessResult(result)) {
     res.sendStatus(HttpStatus.Unauthorized);
     return;
   }
