@@ -1,11 +1,12 @@
 import express, { type Express } from "express";
 import { RouterPath } from "./core/constants/router.constants";
 import { HttpStatus } from "./core/types/http-statuses.types";
+import { authRouter } from "./features/auth/routers/auth.router";
 import { blogsRouter } from "./features/blogs/routers/blogs.router";
+import { commentsRouter } from "./features/comments/routers/comments.router";
 import { postsRouter } from "./features/posts/routers/posts.router";
 import { usersRouter } from "./features/users/routers/users.router";
 import { testingRouter } from "./testing/testing.router";
-import { authRouter } from "./features/auth/routers/auth.router";
 
 export const setupApp = (app: Express) => {
   app.use(express.json());
@@ -20,6 +21,7 @@ export const setupApp = (app: Express) => {
   app.use(RouterPath.testing, testingRouter);
   app.use(RouterPath.users, usersRouter);
   app.use(RouterPath.auth, authRouter);
+  app.use(RouterPath.comments, commentsRouter);
 
   return app;
 };

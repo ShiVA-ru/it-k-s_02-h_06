@@ -3,5 +3,6 @@ export const RouterPath = {
   posts: "/posts",
   users: "/users",
   auth: "/auth",
+  comments: "/comments",
   testing: "/testing",
 };
