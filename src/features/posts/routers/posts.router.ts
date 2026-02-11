@@ -9,6 +9,7 @@ import { deletePostHandler } from "./handlers/posts.delete.handler";
 import { getPostHandler } from "./handlers/posts.get.handler";
 import { getPostListHandler } from "./handlers/posts.get-list.handler";
 import { updatePostHandler } from "./handlers/posts.update.handler";
+import { getPostCommentsListHandler } from "./handlers/posts.get-comments-list.handler";
 
 export const postsRouter = Router();
 
@@ -48,4 +49,11 @@ postsRouter
     idValidation,
     inputValidationResultMiddleware,
     deletePostHandler,
+  )
+  .get(
+    "/:id/comments",
+    idValidation,
+    paginationSortingValidation,
+    inputValidationResultMiddleware,
+    getPostCommentsListHandler,
   );
