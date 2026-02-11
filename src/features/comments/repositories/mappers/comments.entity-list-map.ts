@@ -1,23 +1,23 @@
 import type { WithId } from "mongodb";
 import type { Paginator } from "../../../../core/types/paginator.type";
-import type { PostDb } from "../../types/posts.db.type";
-import type { PostView } from "../../types/posts.view.type";
-import { mapEntityToViewModel } from "./posts.entity-map";
+import type { CommentDb } from "../../types/comments.db.type";
+import type { CommentView } from "../../types/comments.view.type";
+import { mapEntityToViewModel } from "./comments.entity-map";
 
-export const mapPostsToPaginatedView = (
-  dbEntities: WithId<PostDb>[],
+export const mapCommentsToPaginatedView = (
+  dbEntities: WithId<CommentDb>[],
   meta: {
     page: number;
     pageSize: number;
     totalCount: number;
   },
-): Paginator<PostView> => {
+): Paginator<CommentView> => {
   const pagesCount = Math.ceil(meta.totalCount / meta.pageSize);
 
-  const mappedPosts = dbEntities.map(mapEntityToViewModel);
+  const mappedComments = dbEntities.map(mapEntityToViewModel);
 
   return {
-    items: mappedPosts,
+    items: mappedComments,
     pagesCount,
     page: meta.page,
     pageSize: meta.pageSize,

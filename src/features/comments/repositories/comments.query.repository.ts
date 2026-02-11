@@ -1,37 +1,37 @@
 import { ObjectId } from "mongodb";
 import type { Paginator } from "../../../core/types/paginator.type";
 import { buildDbQueryOptions } from "../../../core/utils/build-db-query-options";
-import { postsCollection } from "../../../db/mongo";
-import type { PostsQueryInput } from "../types/posts.query.type";
-import type { PostView } from "../types/posts.view.type";
-import { mapPostsToPaginatedView } from "./mappers/posts.entity-list-map";
-import { mapEntityToViewModel } from "./mappers/posts.entity-map";
+import { commentsCollection } from "../../../db/mongo";
+import type { CommentsQueryInput } from "../types/comments.query.type";
+import type { CommentView } from "../types/comments.view.type";
+import { mapCommentsToPaginatedView } from "./mappers/comments.entity-list-map";
+import { mapEntityToViewModel } from "./mappers/comments.entity-map";
 
-export const postsQueryRepository = {
-  async findAll(queryDto: PostsQueryInput): Promise<Paginator<PostView>> {
+export const commentsQueryRepository = {
+  async findAll(queryDto: CommentsQueryInput): Promise<Paginator<CommentView>> {
     const { skip, limit, sort } = buildDbQueryOptions(queryDto);
     const filter = {};
 
-    const items = await postsCollection
+    const items = await commentsCollection
       .find(filter)
       .skip(skip)
       .limit(limit)
       .sort(sort)
       .toArray();
 
-    const totalCount = await postsCollection.countDocuments(filter);
+    const totalCount = await commentsCollection.countDocuments(filter);
 
-    const postsListOutput = mapPostsToPaginatedView(items, {
+    const commentsListOutput = mapCommentsToPaginatedView(items, {
       pageSize: queryDto.pageSize,
       page: queryDto.pageNumber,
       totalCount,
     });
 
-    return postsListOutput;
+    return commentsListOutput;
   },
 
-  async findOneById(id: string): Promise<PostView | null> {
-    const item = await postsCollection.findOne({ _id: new ObjectId(id) });
+  async findOneById(id: string): Promise<CommentView | null> {
+    const item = await commentsCollection.findOne({ _id: new ObjectId(id) });
 
     if (!item) {
       return null;
@@ -40,24 +40,24 @@ export const postsQueryRepository = {
     return mapEntityToViewModel(item);
   },
 
-  async findByBlogId(
-    blogId: string,
-    queryDto: PostsQueryInput,
-  ): Promise<Paginator<PostView>> {
+  async findByPostId(
+    postId: string,
+    queryDto: CommentsQueryInput,
+  ): Promise<Paginator<CommentView>> {
     const { skip, limit, sort } = buildDbQueryOptions(queryDto);
 
-    const filter = { blogId: blogId };
+    const filter = { postId: postId };
 
-    const items = await postsCollection
+    const items = await commentsCollection
       .find(filter)
       .skip(skip)
       .limit(limit)
       .sort(sort)
       .toArray();
 
-    const totalCount = await postsCollection.countDocuments(filter);
+    const totalCount = await commentsCollection.countDocuments(filter);
 
-    const postsListOutput = mapPostsToPaginatedView(items, {
+    const postsListOutput = mapCommentsToPaginatedView(items, {
       pageSize: queryDto.pageSize,
       page: queryDto.pageNumber,
       totalCount,

@@ -1,7 +1,7 @@
 import { SortDirection } from "../../../core/types/sort-direction.type";
-import { PostSortFields } from "../types/posts.sort-field.type";
+import { CommentSortFields } from "../types/comments.sort-field.type";
 
-const DEFAULT_SORT_BY = PostSortFields.CREATED_AT;
+const DEFAULT_SORT_BY = CommentSortFields.CREATED_AT;
 const DEFAULT_SORT_DIRECTION = SortDirection.Desc;
 const DEFAULT_PAGE_NUMBER = 1;
 const DEFAULT_PAGE_SIZE = 10;
