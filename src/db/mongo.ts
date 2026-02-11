@@ -18,7 +18,7 @@ export async function runDB(url: string) {
   blogsCollection = db.collection<BlogDb>(config.blogCollectionName);
   postsCollection = db.collection<PostDb>(config.postCollectionName);
   usersCollection = db.collection<UserDb>(config.userCollectionName);
-  usersCollection = db.collection<CommentDb>(config.commentCollectionName);
+  commentsCollection = db.collection<CommentDb>(config.commentCollectionName);
 
   try {
     await client.connect();

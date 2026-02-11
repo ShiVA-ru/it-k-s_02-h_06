@@ -1,23 +1,22 @@
 import type { Response } from "express";
-import type { validationErrorsDto } from "../../../../core/types/errors.types";
 import { HttpStatus } from "../../../../core/types/http-statuses.types";
 import type { RequestWithParamsAndBody } from "../../../../core/types/request.types";
 import type { URIParamsId } from "../../../../core/types/uri-params.type";
-import { postsService } from "../../application/posts.service";
-import type { PostInput } from "../../types/posts.input.type";
-import type { PostView } from "../../types/posts.view.type";
+import { commentsService } from "../../application/comments.service";
+import type { CommentInput } from "../../types/comments.input.type";
+import type { CommentView } from "../../types/comments.view.type";
 
-export async function updatePostHandler(
-  req: RequestWithParamsAndBody<URIParamsId, PostInput>,
-  res: Response<PostView | validationErrorsDto | { message: string }>,
+export async function updateCommentHandler(
+  req: RequestWithParamsAndBody<URIParamsId, CommentInput>,
+  res: Response<CommentView | { message: string }>,
 ) {
   try {
-    const updateStatus = await postsService.updateById(req.params.id, req.body);
+    const isUpdated = await commentsService.updateById(req.params.id, req.body);
 
-    if (updateStatus.notFound) {
+    if (!isUpdated) {
       return res
         .status(HttpStatus.NotFound)
-        .send({ message: `${updateStatus.entity} not found` });
+        .send({ message: `comment not found` });
     }
 
     res.sendStatus(HttpStatus.NoContent);

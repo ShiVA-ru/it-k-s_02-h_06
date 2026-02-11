@@ -1,15 +1,16 @@
 import { ObjectId } from "mongodb";
 import { commentsCollection } from "../../../db/mongo";
 import type { CommentDb } from "../types/comments.db.type";
+import type { CommentInput } from "../types/comments.input.type";
 
-export const postsRepository = {
+export const commentsRepository = {
   async create(dto: CommentDb): Promise<string> {
     const result = await commentsCollection.insertOne(dto);
 
     return result.insertedId.toString();
   },
 
-  async updateById(id: string, dto: CommentDb): Promise<boolean> {
+  async updateById(id: string, dto: CommentInput): Promise<boolean> {
     const updateResult = await commentsCollection.updateOne(
       { _id: new ObjectId(id) },
       {

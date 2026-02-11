@@ -1,17 +1,16 @@
 import type { Response } from "express";
-import type { validationErrorsDto } from "../../../../core/types/errors.types";
 import { HttpStatus } from "../../../../core/types/http-statuses.types";
 import type { RequestWithParams } from "../../../../core/types/request.types";
 import type { URIParamsId } from "../../../../core/types/uri-params.type";
-import { postsQueryRepository } from "../../repositories/posts.query.repository";
-import type { PostView } from "../../types/posts.view.type";
+import { commentsQueryRepository } from "../../repositories/comments.query.repository";
+import type { CommentView } from "../../types/comments.view.type";
 
-export async function getPostHandler(
+export async function getCommentHandler(
   req: RequestWithParams<URIParamsId>,
-  res: Response<PostView | validationErrorsDto>,
+  res: Response<CommentView>,
 ) {
   try {
-    const findEntity = await postsQueryRepository.findOneById(req.params.id);
+    const findEntity = await commentsQueryRepository.findOneById(req.params.id);
 
     if (!findEntity) {
       return res.sendStatus(HttpStatus.NotFound);

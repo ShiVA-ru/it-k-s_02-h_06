@@ -3,6 +3,9 @@ import { inputValidationResultMiddleware } from "../../../core/middlewares/valid
 import { idValidation } from "../../../core/middlewares/validation/params-id-validation.middleware";
 import { accessTockenGuardMiddleware } from "../../auth/middlewares/access-token.guard";
 import { commentInputDtoValidation } from "../validation/comments.input-dto.validation.middleware";
+import { deleteCommentHandler } from "./handlers/comments.delete.handler";
+import { getCommentHandler } from "./handlers/comments.get.handler";
+import { updateCommentHandler } from "./handlers/comments.update.handler";
 
 export const commentsRouter = Router();
 
@@ -19,7 +22,7 @@ commentsRouter
     inputValidationResultMiddleware,
     updateCommentHandler,
   )
-  //\DELETE
+  // DELETE
   .delete(
     "/:id",
     accessTockenGuardMiddleware,
