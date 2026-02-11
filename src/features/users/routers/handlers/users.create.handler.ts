@@ -2,8 +2,8 @@ import type { Response } from "express";
 import type { validationErrorType } from "../../../../core/types/errors.types";
 import { HttpStatus } from "../../../../core/types/http-statuses.types";
 import type { RequestWithBody } from "../../../../core/types/request.types";
-import { ResultStatus } from "../../../../core/types/result.code";
 import { resultCodeToHttpException } from "../../../../core/utils/result-code-to-http-exception";
+import { isSuccessResult } from "../../../../core/utils/type-guards";
 import { usersService } from "../../application/users.service";
 import { usersQueryRepository } from "../../repositories/users.query.repository";
 import type { UserInput } from "../../types/users.input.type";
@@ -16,7 +16,7 @@ export async function createUserHandler(
   try {
     const result = await usersService.create(req.body);
 
-    if (result.status !== ResultStatus.Success || !result.data) {
+    if (!isSuccessResult(result)) {
       return res
         .status(resultCodeToHttpException(result.status))
         .send(result.extensions);
