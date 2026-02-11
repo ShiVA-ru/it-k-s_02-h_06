@@ -1,24 +1,20 @@
 import { ObjectId } from "mongodb";
-import { postsCollection } from "../../../db/mongo";
-import type { PostDb } from "../types/posts.db.type";
+import { commentsCollection } from "../../../db/mongo";
+import type { CommentDb } from "../types/comments.db.type";
 
 export const postsRepository = {
-  async create(dto: PostDb): Promise<string> {
-    const result = await postsCollection.insertOne(dto);
+  async create(dto: CommentDb): Promise<string> {
+    const result = await commentsCollection.insertOne(dto);
 
     return result.insertedId.toString();
   },
 
-  async updateById(id: string, dto: PostDb): Promise<boolean> {
-    const updateResult = await postsCollection.updateOne(
+  async updateById(id: string, dto: CommentDb): Promise<boolean> {
+    const updateResult = await commentsCollection.updateOne(
       { _id: new ObjectId(id) },
       {
         $set: {
-          title: dto.title,
-          shortDescription: dto.shortDescription,
           content: dto.content,
-          blogId: dto.blogId,
-          blogName: dto.blogName,
         },
       },
     );
@@ -31,7 +27,7 @@ export const postsRepository = {
   },
 
   async deleteById(id: string): Promise<boolean> {
-    const deleteResult = await postsCollection.deleteOne({
+    const deleteResult = await commentsCollection.deleteOne({
       _id: new ObjectId(id),
     });
 
@@ -42,13 +38,13 @@ export const postsRepository = {
     return true;
   },
 
-  async deleteByBlogId(blogId: string): Promise<void> {
-    const deleteResult = await postsCollection.deleteMany({
+  async deleteByPostId(blogId: string): Promise<void> {
+    const deleteResult = await commentsCollection.deleteMany({
       blogId: blogId,
     });
 
     if (deleteResult.deletedCount < 1) {
-      throw new Error("Post not exist");
+      throw new Error("Comment not exist");
     }
 
     return;
