@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+import { ObjectId, WithId } from "mongodb";
 import { postsCollection } from "../../../db/mongo";
 import type { PostDb } from "../types/posts.db.type";
 
@@ -52,5 +52,15 @@ export const postsRepository = {
     }
 
     return;
+  },
+
+  async findOneById(id: string): Promise<WithId<PostDb> | null> {
+    const item = await postsCollection.findOne({ _id: new ObjectId(id) });
+
+    if (!item) {
+      return null;
+    }
+
+    return item;
   },
 };

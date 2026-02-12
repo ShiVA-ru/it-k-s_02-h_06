@@ -1,27 +1,58 @@
+import type { IdType } from "../../../core/types/id.types";
 import { ResultStatus } from "../../../core/types/result.code";
-import { Result } from "../../../core/types/result.type";
+import type { Result } from "../../../core/types/result.type";
+import { postsRepository } from "../../posts/repositories/posts.repository";
+import { usersRepository } from "../../users/repositories/users.repository";
 import { commentsRepository } from "../repositories/comments.repository";
+import type { CommentDb } from "../types/comments.db.type";
 import type { CommentInput } from "../types/comments.input.type";
 
 export const commentsService = {
-  // async create(dto: CommentInput): Promise<string | null> {
-  //   const blogEntity = await commentsRepository.findOneById(dto.blogId);
+  async create(
+    userId: string,
+    postId: string,
+    dto: CommentInput,
+  ): Promise<Result<IdType | null>> {
+    const postEntity = await postsRepository.findOneById(postId);
 
-  //   if (!blogEntity) {
-  //     return null;
-  //   }
+    if (!postEntity) {
+      return {
+        status: ResultStatus.NotFound,
+        errorMessage: "Post not found",
+        extensions: [],
+        data: null,
+      };
+    }
 
-  //   const newEntity: PostDb = {
-  //     title: dto.title,
-  //     shortDescription: dto.shortDescription,
-  //     content: dto.content,
-  //     blogId: dto.blogId,
-  //     blogName: blogEntity.name,
-  //     createdAt: new Date().toISOString(),
-  //   };
+    const userEntity = await usersRepository.findOneById(userId);
 
-  //   return postsRepository.create(newEntity);
-  // },
+    if (!userEntity) {
+      return {
+        status: ResultStatus.NotFound,
+        errorMessage: "User not found",
+        extensions: [],
+        data: null,
+      };
+    }
+
+    const newEntity: CommentDb = {
+      content: dto.content,
+      postId: postId,
+      commentatorInfo: {
+        userId: userId,
+        userLogin: userEntity.login,
+      },
+      createdAt: new Date().toISOString(),
+    };
+
+    const commentId = await commentsRepository.create(newEntity);
+
+    return {
+      status: ResultStatus.Success,
+      extensions: [],
+      data: { id: commentId },
+    };
+  },
 
   async updateById(id: string, dto: CommentInput): Promise<boolean | null> {
     const isUpdated = await commentsRepository.updateById(id, dto);

@@ -1,6 +1,7 @@
 import { ObjectId, type WithId } from "mongodb";
 import { usersCollection } from "../../../db/mongo";
 import type { UserDb } from "../types/users.db.type";
+import { UserView } from "../types/users.view.type";
 
 export const usersRepository = {
   async create(dto: UserDb): Promise<string> {
@@ -38,9 +39,13 @@ export const usersRepository = {
     });
   },
 
-  // async isExistByEmail(email: string): Promise<WithId<UserDb> | null> {
-  //   return usersCollection.findOne({
-  //     email,
-  //   });
-  // },
+  async findOneById(id: string): Promise<UserDb | null> {
+    const item = await usersCollection.findOne({ _id: new ObjectId(id) });
+
+    if (!item) {
+      return null;
+    }
+
+    return item;
+  },
 };
