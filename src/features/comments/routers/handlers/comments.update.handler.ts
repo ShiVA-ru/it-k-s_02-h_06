@@ -1,22 +1,39 @@
 import type { Response } from "express";
 import { HttpStatus } from "../../../../core/types/http-statuses.types";
-import type { RequestWithParamsAndBody } from "../../../../core/types/request.types";
+import type { IdType } from "../../../../core/types/id.types";
+import type { RequestWithParamsBodyUserId } from "../../../../core/types/request.types";
 import type { URIParamsId } from "../../../../core/types/uri-params.type";
+import { resultCodeToHttpException } from "../../../../core/utils/result-code-to-http-exception";
+import { isSuccessResult } from "../../../../core/utils/type-guards";
 import { commentsService } from "../../application/comments.service";
 import type { CommentInput } from "../../types/comments.input.type";
 import type { CommentView } from "../../types/comments.view.type";
 
 export async function updateCommentHandler(
-  req: RequestWithParamsAndBody<URIParamsId, CommentInput>,
+  req: RequestWithParamsBodyUserId<URIParamsId, CommentInput, IdType>,
   res: Response<CommentView | { message: string }>,
 ) {
   try {
-    const isUpdated = await commentsService.updateById(req.params.id, req.body);
+    const userId = req.user?.id;
 
-    if (!isUpdated) {
-      return res
-        .status(HttpStatus.NotFound)
-        .send({ message: `comment not found` });
+    if (!userId) {
+      res.status(HttpStatus.NotFound).send({
+        message: `user not found`,
+      });
+      return;
+    }
+
+    const updatedResult = await commentsService.updateById(
+      userId,
+      req.params.id,
+      req.body,
+    );
+
+    if (!isSuccessResult(updatedResult)) {
+      res.status(resultCodeToHttpException(updatedResult.status)).send({
+        message: updatedResult.errorMessage ? updatedResult.errorMessage : "",
+      });
+      return;
     }
 
     res.sendStatus(HttpStatus.NoContent);

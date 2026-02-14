@@ -50,4 +50,14 @@ export const commentsRepository = {
 
     return;
   },
+
+  async findOneById(id: string): Promise<CommentDb | null> {
+    const item = await commentsCollection.findOne({ _id: new ObjectId(id) });
+
+    if (!item) {
+      return null;
+    }
+
+    return item;
+  },
 };

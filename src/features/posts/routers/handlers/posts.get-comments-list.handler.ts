@@ -7,6 +7,7 @@ import { commentsQueryRepository } from "../../../comments/repositories/comments
 import type { CommentsQueryInput } from "../../../comments/types/comments.query.type";
 import type { CommentView } from "../../../comments/types/comments.view.type";
 import type { IdType } from "../../../../core/types/id.types";
+import { postsRepository } from "../../repositories/posts.repository";
 
 export async function getPostCommentsListHandler(
   req: RequestWithParams<IdType>,
@@ -17,6 +18,12 @@ export async function getPostCommentsListHandler(
     const queryData = matchedData<CommentsQueryInput>(req, {
       locations: ["query"],
     });
+
+    const queryPost = await postsRepository.findOneById(postId);
+
+    if (!queryPost) {
+      res.sendStatus(HttpStatus.NotFound);
+    }
 
     const commentsListOutput = await commentsQueryRepository.findByPostId(
       postId,

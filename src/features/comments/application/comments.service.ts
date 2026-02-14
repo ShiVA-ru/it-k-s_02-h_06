@@ -54,17 +54,88 @@ export const commentsService = {
     };
   },
 
-  async updateById(id: string, dto: CommentInput): Promise<boolean | null> {
+  async updateById(
+    userId: string,
+    id: string,
+    dto: CommentInput,
+  ): Promise<Result<boolean | null>> {
+    const updatedEntity = await commentsRepository.findOneById(id);
+
+    if (!updatedEntity) {
+      return {
+        status: ResultStatus.NotFound,
+        errorMessage: "comment not found",
+        extensions: [],
+        data: null,
+      };
+    }
+
+    if (updatedEntity?.commentatorInfo.userId !== userId) {
+      return {
+        status: ResultStatus.Forbidden,
+        errorMessage: "user is incorrect",
+        extensions: [],
+        data: null,
+      };
+    }
+
     const isUpdated = await commentsRepository.updateById(id, dto);
 
     if (!isUpdated) {
-      return null;
+      return {
+        status: ResultStatus.NotFound,
+        errorMessage: "comment is not updated",
+        extensions: [],
+        data: null,
+      };
     }
 
-    return true;
+    return {
+      status: ResultStatus.Success,
+      extensions: [],
+      data: true,
+    };
   },
 
-  async deleteById(id: string): Promise<boolean> {
-    return await commentsRepository.deleteById(id);
+  async deleteById(
+    userId: string,
+    id: string,
+  ): Promise<Result<boolean | null>> {
+    const deletedEntity = await commentsRepository.findOneById(id);
+
+    if (!deletedEntity) {
+      return {
+        status: ResultStatus.NotFound,
+        errorMessage: "comment not found",
+        extensions: [],
+        data: null,
+      };
+    }
+
+    if (deletedEntity?.commentatorInfo.userId !== userId) {
+      return {
+        status: ResultStatus.Forbidden,
+        errorMessage: "user is incorrect",
+        extensions: [],
+        data: null,
+      };
+    }
+
+    const isDeleted = await commentsRepository.deleteById(id);
+
+    if (!isDeleted) {
+      return {
+        status: ResultStatus.NotFound,
+        errorMessage: "comment is not updated",
+        extensions: [],
+        data: null,
+      };
+    }
+
+    return {
+      status: ResultStatus.Success,
+      extensions: [],
+      data: true,
+    };
   },
 };

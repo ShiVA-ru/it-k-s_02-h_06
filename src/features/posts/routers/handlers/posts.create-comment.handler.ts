@@ -40,9 +40,9 @@ export async function createPostCommentHandler(
       return res.sendStatus(HttpStatus.NotFound);
     }
 
-    res.status(HttpStatus.Created).json(createdEntity);
+    return res.status(HttpStatus.Created).json(createdEntity);
   } catch (error) {
     console.error(error);
-    res.sendStatus(HttpStatus.InternalServerError);
+    return res.sendStatus(HttpStatus.InternalServerError);
   }
 }

@@ -1,4 +1,4 @@
-import { ObjectId, WithId } from "mongodb";
+import { ObjectId, type WithId } from "mongodb";
 import { postsCollection } from "../../../db/mongo";
 import type { PostDb } from "../types/posts.db.type";
 
